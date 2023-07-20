@@ -1,4 +1,4 @@
-# Foodgram - Продуктовый помощник
+# Foodgram - пока не Продуктовый помощник
 
 ![foodgram_workflow](https://github.com/kaydalova/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
