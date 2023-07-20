@@ -21,7 +21,6 @@ def validate_ingredient_name(value):
                                 'цифры, пробелы и знаки ",", "-", ".", "(", ")" и "&".'))
 
 
-
 class UnicodeUsernameValidator:
     """
     Валидатор для проверки допустимости символов в имени пользователя.
