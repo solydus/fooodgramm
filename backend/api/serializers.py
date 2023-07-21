@@ -14,7 +14,6 @@ from .validators import (validate_cooking_time,
                          validate_tags)
 
 
-
 class RecipeToRepresentationSerializer(serializers.ModelSerializer):
     """ отображения модели Recipe  """
     class Meta:
@@ -61,15 +60,17 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
     def validate_like_recipe(self, value):
         user = self.context.get('request').user
         recipe = self.context.get('recipe')
-        if FavoriteAdmin.objects.filter(like_recipe=user, recipe=recipe).exists():
+        if Favorite.objects.filter(like_recipe=user, recipe=recipe).exists():
             raise serializers.ValidationError('Рецепт уже в избранном')
         return value
 
     def create(self, validated_data):
         recipe = self.context.get('recipe')
         user = validated_data.pop('like_recipe')
-        FavoriteAdmin, created = FavoriteAdmin.objects.get_or_create(recipe=recipe, like_recipe=user, defaults={})
-        return FavoriteAdmin
+        Favorite, created = Favorite.objects.get_or_create(recipe=recipe,
+                                                           like_recipe=user,
+                                                           defaults={})
+        return Favorite
 
 
 
@@ -89,7 +90,8 @@ class UserSerializer(serializers.ModelSerializer):
     def is_subscribed(self):
         """ true/false на подписчика """
         user = self.context.get('request').user
-        return user.is_authenticated and user.follower.filter(author=self.instance).exists()
+        return user.is_authenticated and
+      user.follower.filter(author=self.instance).exists()
     
     class Meta:
         model = User
@@ -253,7 +255,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
-    """Сериализатор определяет, как объекты ShoppingCart должны быть преобразованы в JSON и обратно."""
+    """Сериализатор определяет, как объекты ShoppingCart
+    должны быть преобразованы в JSON и обратно."""
     recipe = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all())
     cart_owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -279,4 +282,3 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         instance.recipe = recipe
         instance.save()
         return instance
-
